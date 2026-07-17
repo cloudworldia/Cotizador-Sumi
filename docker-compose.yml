@@ -1,25 +1,63 @@
 services:
 
+  n8n:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+
+    ports:
+      - "5678:5678"
+
+    environment:
+      - TZ=America/Bogota
+      - GENERIC_TIMEZONE=America/Bogota
+
+      # Dominio de n8n: EasyPanel lo genera automáticamente al activar
+      # "Domains" en este servicio (ej: https://n8n-abc123.tupanel.easypanel.host).
+      # Despliega primero, copia esa URL aquí, y vuelve a desplegar.
+      - WEBHOOK_URL=https://COMPLETAR_DESPUES_DEL_DEPLOY
+      - N8N_HOST=COMPLETAR_DESPUES_DEL_DEPLOY
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=https
+      - N8N_SECURE_COOKIE=true
+
+      # Módulos custom (pdf-parse, mammoth, xlsx) instalados en el Dockerfile
+      - NODE_FUNCTION_ALLOW_BUILTIN=stream
+      - NODE_FUNCTION_ALLOW_EXTERNAL=pdf-parse,mammoth,xlsx
+      - NODE_PATH=/usr/local/lib/custom-modules/node_modules
+
+      - N8N_RUNNERS_MAX_OLD_SPACE_SIZE=512
+      - N8N_RUNNERS_ALLOW_PROTOTYPE_MUTATION=true
+
+      # Usuario inicial (CAMBIA la password)
+      - N8N_BASIC_AUTH_ACTIVE=true
+      - N8N_BASIC_AUTH_USER=admin
+      - N8N_BASIC_AUTH_PASSWORD=CambiaEstaClave123
+
+    volumes:
+      - n8n_data:/home/node/.n8n
+
   postgres:
-    image: postgres:17
+    image: postgres:16-alpine
     restart: unless-stopped
 
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: n8n
+      POSTGRES_DB: evolution
+      POSTGRES_USER: evolution
+      POSTGRES_PASSWORD: evolution123      # CAMBIA esta password
 
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: ["CMD-SHELL", "pg_isready -U evolution"]
       interval: 10s
       timeout: 5s
       retries: 10
 
   redis:
-    image: redis:7
+    image: redis:7-alpine
     restart: unless-stopped
 
     command: redis-server --appendonly yes
@@ -27,12 +65,8 @@ services:
     volumes:
       - redis_data:/data
 
-  n8n:
-
-    build:
-      context: .
-      dockerfile: Dockerfile
-
+  evolution-api:
+    image: evoapicloud/evolution-api:latest
     restart: unless-stopped
 
     depends_on:
@@ -40,34 +74,32 @@ services:
         condition: service_healthy
 
     ports:
-      - "5678:5678"
+      - "8080:8080"
 
     environment:
+      # API
+      - SERVER_TYPE=http
+      - SERVER_PORT=8080
+      - AUTHENTICATION_API_KEY=TU_API_KEY_SUPER_SEGURA   # CAMBIA esta clave
 
-      TZ: America/Bogota
-      GENERIC_TIMEZONE: America/Bogota
+      # Base de datos (usa el nombre del servicio "postgres" de este mismo archivo)
+      - DATABASE_ENABLED=true
+      - DATABASE_PROVIDER=postgresql
+      - DATABASE_CONNECTION_URI=postgresql://evolution:evolution123@postgres:5432/evolution
 
-      DB_TYPE: postgresdb
-      DB_POSTGRESDB_HOST: postgres
-      DB_POSTGRESDB_PORT: 5432
-      DB_POSTGRESDB_DATABASE: n8n
-      DB_POSTGRESDB_USER: postgres
-      DB_POSTGRESDB_PASSWORD: postgres
+      # Redis (usa el nombre del servicio "redis")
+      - CACHE_REDIS_ENABLED=true
+      - CACHE_REDIS_URI=redis://redis:6379
 
-      EXECUTIONS_MODE: regular
-
-      N8N_ENCRYPTION_KEY: CAMBIA_ESTA_LLAVE
-
-      NODE_FUNCTION_ALLOW_BUILTIN: "*"
-      NODE_FUNCTION_ALLOW_EXTERNAL: pdf-parse,mammoth,xlsx,csv-parser,file-type
+      # Instancias
+      - CONFIG_SESSION_PHONE_CLIENT=Chrome
+      - CONFIG_SESSION_PHONE_NAME=EvolutionAPI
 
     volumes:
-      - n8n_data:/home/node/.n8n
+      - evolution_instances:/evolution/instances
 
 volumes:
-
-  postgres_data:
-
-  redis_data:
-
   n8n_data:
+  postgres_data:
+  redis_data:
+  evolution_instances:
