@@ -9,7 +9,7 @@ services:
     environment:
       - TZ=America/Bogota
       - GENERIC_TIMEZONE=America/Bogota
-      - WEBHOOK_URL=https://cotizador-sumimilla-n8n-file.j1cl77.easypanel.host
+      - N8N_WEBHOOK_URL=https://cotizador-sumimilla-n8n-file.j1cl77.easypanel.host
       - N8N_HOST=cotizador-sumimilla-n8n-file.j1cl77.easypanel.host
       - N8N_PORT=5678
       - N8N_PROTOCOL=https
