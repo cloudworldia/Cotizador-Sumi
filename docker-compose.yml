@@ -15,8 +15,6 @@ services:
       - NODE_FUNCTION_ALLOW_BUILTIN=stream
       - NODE_FUNCTION_ALLOW_EXTERNAL=pdf-parse,mammoth,xlsx
       - NODE_PATH=/usr/local/lib/custom-modules/node_modules
-      - N8N_RUNNERS_MAX_OLD_SPACE_SIZE=512
-      - N8N_RUNNERS_ALLOW_PROTOTYPE_MUTATION=true
       - N8N_BASIC_AUTH_ACTIVE=true
       - N8N_BASIC_AUTH_USER=admin
       - N8N_BASIC_AUTH_PASSWORD=Isaac2014
