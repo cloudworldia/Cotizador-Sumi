@@ -1,41 +1,27 @@
 services:
-
   n8n:
     build:
       context: .
       dockerfile: Dockerfile
     restart: unless-stopped
-
     ports:
       - "5678:5678"
-
     environment:
       - TZ=America/Bogota
       - GENERIC_TIMEZONE=America/Bogota
-
-      # Dominio de n8n: EasyPanel lo genera automáticamente al activar
-      # "Domains" en este servicio (ej: https://n8n-abc123.tupanel.easypanel.host).
-      # Despliega primero, copia esa URL aquí, y vuelve a desplegar.
-      #- WEBHOOK_URL=https://COMPLETAR_DESPUES_DEL_DEPLOY
-      #- N8N_HOST=COMPLETAR_DESPUES_DEL_DEPLOY
       - N8N_PORT=5678
       - N8N_PROTOCOL=https
       - N8N_SECURE_COOKIE=true
-
-      # Módulos custom (pdf-parse, mammoth, xlsx) instalados en el Dockerfile
       - NODE_FUNCTION_ALLOW_BUILTIN=stream
       - NODE_FUNCTION_ALLOW_EXTERNAL=pdf-parse,mammoth,xlsx
       - NODE_PATH=/usr/local/lib/custom-modules/node_modules
-
       - N8N_RUNNERS_MAX_OLD_SPACE_SIZE=512
       - N8N_RUNNERS_ALLOW_PROTOTYPE_MUTATION=true
-
-      # Usuario inicial (CAMBIA la password)
       - N8N_BASIC_AUTH_ACTIVE=true
       - N8N_BASIC_AUTH_USER=admin
       - N8N_BASIC_AUTH_PASSWORD=Isaac2014
-
     volumes:
       - n8n_data:/home/node/.n8n
-  volumes:
+
+volumes:
   n8n_data:
