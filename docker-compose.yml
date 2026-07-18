@@ -7,17 +7,18 @@ services:
     ports:
       - "5678:5678"
     environment:
-      - TZ=America/Bogota
-      - GENERIC_TIMEZONE=America/Bogota
-      - N8N_PORT=5678
-      - N8N_PROTOCOL=https
-      - N8N_SECURE_COOKIE=true
-      - NODE_FUNCTION_ALLOW_BUILTIN=stream
-      - NODE_FUNCTION_ALLOW_EXTERNAL=mammoth,xlsx
-      - NODE_PATH=/usr/local/lib/custom-modules/node_modules
-      - N8N_BASIC_AUTH_ACTIVE=true
-      - N8N_BASIC_AUTH_USER=admin
-      - N8N_BASIC_AUTH_PASSWORD=Isaac2014
+  - TZ=America/Bogota
+  - GENERIC_TIMEZONE=America/Bogota
+  - WEBHOOK_URL=https://cotizador-sumimilla-n8n-file.j1cl77.easypanel.host
+  - N8N_HOST=cotizador-sumimilla-n8n-file.j1cl77.easypanel.host
+  - N8N_PORT=5678
+  - N8N_PROTOCOL=https
+  - N8N_SECURE_COOKIE=true
+  - NODE_FUNCTION_ALLOW_BUILTIN=stream
+  - NODE_FUNCTION_ALLOW_EXTERNAL=mammoth,xlsx
+  - N8N_BASIC_AUTH_ACTIVE=true
+  - N8N_BASIC_AUTH_USER=admin
+  - N8N_BASIC_AUTH_PASSWORD=Isaac2014
     volumes:
       - n8n_data:/home/node/.n8n
 
