@@ -14,7 +14,7 @@ services:
       - N8N_PROTOCOL=https
       - N8N_SECURE_COOKIE=true
       - NODE_FUNCTION_ALLOW_BUILTIN=stream
-      - NODE_FUNCTION_ALLOW_EXTERNAL=mammoth,xlsx
+      - NODE_FUNCTION_ALLOW_EXTERNAL=mammoth,xlsx,pdf-parse
       - N8N_BASIC_AUTH_ACTIVE=true
       - N8N_BASIC_AUTH_USER=admin
       - N8N_BASIC_AUTH_PASSWORD=Isaac2014
