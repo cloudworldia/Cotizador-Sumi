@@ -12,7 +12,7 @@ RUN npm install -g \
 RUN mkdir -p /home/node/.n8n/nodes \
  && cd /home/node/.n8n/nodes \
  && npm init -y \
- && npm install pdfjs-dist@5.4.296
+ && npm install pdfjs-dist@5.3.31   # ← CAMBIA 5.4.296 → 5.3.31
 
 RUN find /usr/local/lib/node_modules/n8n/node_modules/.pnpm \
     -maxdepth 1 \
